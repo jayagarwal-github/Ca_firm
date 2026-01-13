@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agrawal Srivastava & Co. | Chartered Accountants</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React Libraries -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- Babel for JSX Transpilation -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;600&family=Playfair+Display:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5 {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .company-name {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .nav-link:hover {
+            color: #1d4ed8;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #1a3a5f 0%, #2c5282 100%);
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            transition: transform 0.3s ease;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .testimonial-slide {
+            animation: fadeIn 1s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Blink animation for experience counter */
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.3;
+            }
+        }
+
+        .blink-animation {
+            animation: blink 3s infinite;
+        }
+
+        /* Mobile menu animation */
+        @keyframes slideDown {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .mobile-menu {
+            animation: slideDown 0.3s ease-out;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .hero-image {
+                max-height: 300px;
+                width: 100%;
+                object-fit: cover;
+            }
+
+            .experience-counter {
+                position: relative !important;
+                top: 0 !important;
+                left: 0 !important;
+                margin: 20px auto !important;
+                width: 80% !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50">
+    <!-- Root Container for React App -->
+    <div id="root"></div>
+
+    <!-- React JSX Script with Babel -->
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // Main App Component
+        function App() {
+            const [activeTab, setActiveTab] = useState('home');
+            const [testimonialIndex, setTestimonialIndex] = useState(0);
+            const [formData, setFormData] = useState({
+                name: '',
+                email: '',
+                phone: '',
+                service: '',
+                message: ''
+            });
+            const [formSubmitted, setFormSubmitted] = useState(false);
+            const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+            const [blinkCounter, setBlinkCounter] = useState(true);
+
+            // Reference for mobile menu
+            const mobileMenuRef = useRef(null);
+
+            // Toggle mobile menu
+            const toggleMobileMenu = () => {
+                setMobileMenuOpen(!mobileMenuOpen);
+            };
+
+            // Close mobile menu when clicking outside
+            useEffect(() => {
+                const handleClickOutside = (event) => {
+                    if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target)) {
+                        setMobileMenuOpen(false);
+                    }
+                };
+
+                document.addEventListener('mousedown', handleClickOutside);
+                return () => {
+                    document.removeEventListener('mousedown', handleClickOutside);
+                };
+            }, [mobileMenuRef]);
+
+            // Blink animation for experience counter
+            useEffect(() => {
+                const interval = setInterval(() => {
+                    setBlinkCounter(prev => !prev);
+                }, 3000); // Blink every 3 seconds
+
+                return () => clearInterval(interval);
+            }, []);
+
+            // Testimonials Data
+            const testimonials = [
+                {
+                    name: 'Rajesh Kumar',
+                    company: 'TechNova Solutions',
+                    text: 'Agrawal Srivastava & Co. helped us streamline our tax planning and saved us 30% on our corporate taxes. Highly professional team!',
+                    rating: 5
+                },
+                {
+                    name: 'Priya Sharma',
+                    company: 'Sharma Textiles Ltd',
+                    text: 'Their audit services are thorough and their financial advisory helped us expand our business internationally.',
+                    rating: 5
+                },
+                {
+                    name: 'Amit Patel',
+                    company: 'Patel Constructions',
+                    text: 'Excellent GST compliance services. They made complex regulations easy to understand and implement.',
+                    rating: 4
+                }
+            ];
+
+            // Services Data
+            const services = [
+                {
+                    icon: 'fa-chart-line',
+                    title: 'Tax Planning',
+                    description: 'Strategic tax planning to optimize liabilities and ensure compliance with changing tax laws.'
+                },
+                {
+                    icon: 'fa-file-invoice-dollar',
+                    title: 'Audit & Assurance',
+                    description: 'Comprehensive audit services for statutory compliance and internal financial controls.'
+                },
+                {
+                    icon: 'fa-handshake',
+                    title: 'Business Advisory',
+                    description: 'Expert guidance for business growth, mergers, acquisitions, and financial restructuring.'
+                },
+                {
+                    icon: 'fa-balance-scale',
+                    title: 'GST Services',
+                    description: 'End-to-end GST compliance including registration, filing, and advisory services.'
+                },
+                {
+                    icon: 'fa-user-tie',
+                    title: 'Corporate Finance',
+                    description: 'Capital structuring, fundraising, and financial modeling for businesses of all sizes.'
+                },
+                {
+                    icon: 'fa-lock',
+                    title: 'Risk Management',
+                    description: 'Identify, assess and mitigate financial risks to protect your business interests.'
+                }
+            ];
+
+            // Team Members Data
+            const teamMembers = [
+                {
+                    name: 'Ramesh Agrawal',
+                    designation: 'Managing Partner',
+                    qualification: 'FCA, CPA',
+                    experience: '25 years',
+                    specialty: 'International Taxation'
+                },
+                {
+                    name: 'Vinod Srivastava',
+                    designation: 'Senior Partner',
+                    qualification: 'FCA, CS',
+                    experience: '22 years',
+                    specialty: 'Audit & Assurance'
+                },
+                {
+                    name: 'Anjali Deshpande',
+                    designation: 'Partner',
+                    qualification: 'CA, CFA',
+                    experience: '18 years',
+                    specialty: 'Corporate Finance'
+                },
+                {
+                    name: 'Sanjay Verma',
+                    designation: 'Partner',
+                    qualification: 'CA, LLB',
+                    experience: '15 years',
+                    specialty: 'GST & Compliance'
+                }
+            ];
+
+            // Rotate testimonials every 5 seconds
+            useEffect(() => {
+                const interval = setInterval(() => {
+                    setTestimonialIndex((prevIndex) =>
+                        prevIndex === testimonials.length - 1 ? 0 : prevIndex + 1
+                    );
+                }, 5000);
+
+                return () => clearInterval(interval);
+            }, [testimonials.length]);
+
+            // Handle form input changes
+            const handleInputChange = (e) => {
+                const { name, value } = e.target;
+                setFormData({
+                    ...formData,
+                    [name]: value
+                });
+            };
+
+            // Handle form submission
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                // In a real app, you would send this data to a server
+                console.log('Form submitted:', formData);
+                setFormSubmitted(true);
+
+                // Reset form after 3 seconds
+                setTimeout(() => {
+                    setFormSubmitted(false);
+                    setFormData({
+                        name: '',
+                        email: '',
+                        phone: '',
+                        service: '',
+                        message: ''
+                    });
+                }, 3000);
+            };
+
+            // Navigation Component
+            const Navigation = () => (
+                <nav className="bg-white shadow-md sticky top-0 z-50">
+                    <div className="container mx-auto px-4 py-3 flex justify-between items-center">
+                        <div className="flex items-center">
+                            <div className="bg-blue-800 text-white p-2 rounded-lg mr-3">
+                                <i className="fas fa-balance-scale text-xl"></i>
+                            </div>
+                            <h1 className="company-name text-2xl font-bold text-gray-800">
+                                <span className="text-blue-800">Agrawal</span>
+                                <span className="text-blue-600"> Srivastava</span>
+                                <span className="text-gray-600"> & Co.</span>
+                            </h1>
+                        </div>
+
+                        {/* Desktop Navigation */}
+                        <div className="hidden md:flex space-x-8">
+                            {['home', 'services', 'about', 'team', 'contact'].map((tab) => (
+                                <button
+                                    key={tab}
+                                    className={`font-medium capitalize ${activeTab === tab ? 'text-blue-700 border-b-2 border-blue-700' : 'text-gray-700'} hover:text-blue-600 transition duration-300`}
+                                    onClick={() => {
+                                        setActiveTab(tab);
+                                        setMobileMenuOpen(false);
+                                    }}
+                                >
+                                    {tab}
+                                </button>
+                            ))}
+                        </div>
+
+                        <div className="hidden md:block">
+                            <button className="bg-blue-700 hover:bg-blue-800 text-white px-6 py-2 rounded-lg font-medium transition duration-300">
+                                <i className="fas fa-phone-alt mr-2"></i> Book Consultation
+                            </button>
+                        </div>
+
+                        {/* Mobile Menu Button */}
+                        <button
+                            className="md:hidden text-gray-700 text-2xl"
+                            onClick={toggleMobileMenu}
+                        >
+                            <i className="fas fa-bars"></i>
+                        </button>
+                    </div>
+
+                    {/* Mobile Menu */}
+                    {mobileMenuOpen && (
+                        <div ref={mobileMenuRef} className="md:hidden mobile-menu bg-white shadow-lg">
+                            <div className="container mx-auto px-4 py-3">
+                                {['home', 'services', 'about', 'team', 'contact'].map((tab) => (
+                                    <button
+                                        key={tab}
+                                        className={`block w-full text-left py-3 px-4 font-medium capitalize ${activeTab === tab ? 'text-blue-700 bg-blue-50 rounded-lg' : 'text-gray-700'} hover:text-blue-600 transition duration-300`}
+                                        onClick={() => {
+                                            setActiveTab(tab);
+                                            setMobileMenuOpen(false);
+                                        }}
+                                    >
+                                        {tab}
+                                    </button>
+                                ))}
+                                <button className="w-full mt-4 bg-blue-700 hover:bg-blue-800 text-white px-6 py-3 rounded-lg font-medium transition duration-300">
+                                    <i className="fas fa-phone-alt mr-2"></i> Book Consultation
+                                </button>
+                            </div>
+                        </div>
+                    )}
+                </nav>
+            );
+
+            // Home Component
+            const HomeSection = () => (
+                <section id="home" className="gradient-bg text-white">
+                    <div className="container mx-auto px-4 py-12 md:py-20">
+                        <div className="flex flex-col lg:flex-row items-center">
+                            <div className="lg:w-1/2 mb-12 lg:mb-0 lg:pr-10">
+                                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight">Expert Financial Guidance for Your Business Success</h2>
+                                <p className="text-lg md:text-xl mb-8 opacity-90 leading-relaxed">Trusted Chartered Accountants providing comprehensive tax, audit, and advisory services since 1998. Your financial success is our commitment.</p>
+                                <div className="flex flex-wrap gap-4">
+                                    <button
+                                        onClick={() => setActiveTab('services')}
+                                        className="bg-white text-blue-800 hover:bg-gray-100 font-semibold px-6 py-3 rounded-lg text-base md:text-lg transition duration-300 flex items-center"
+                                    >
+                                        Our Services <i className="fas fa-arrow-right ml-2"></i>
+                                    </button>
+                                    <button
+                                        onClick={() => setActiveTab('contact')}
+                                        className="bg-transparent border-2 border-white hover:bg-white hover:text-blue-800 font-semibold px-6 py-3 rounded-lg text-base md:text-lg transition duration-300 flex items-center"
+                                    >
+                                        <i className="fas fa-calendar-alt mr-2"></i> Free Consultation
+                                    </button>
+                                </div>
+
+                                {/* Stats for mobile */}
+                                <div className="mt-10 md:hidden">
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-4 text-center">
+                                            <div className="text-2xl font-bold">500+</div>
+                                            <div className="text-sm">Clients</div>
+                                        </div>
+                                        <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-4 text-center">
+                                            <div className="text-2xl font-bold">25+</div>
+                                            <div className="text-sm">Years Experience</div>
+                                        </div>
+                                        <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-4 text-center">
+                                            <div className="text-2xl font-bold">15+</div>
+                                            <div className="text-sm">Expert CAs</div>
+                                        </div>
+                                        <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-4 text-center">
+                                            <div className="text-2xl font-bold">24/7</div>
+                                            <div className="text-sm">Support</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="lg:w-1/2 flex justify-center relative">
+                                <div className="relative w-full max-w-lg">
+                                    <div className="bg-white bg-opacity-10 rounded-2xl p-2 backdrop-blur-sm overflow-hidden">
+                                        <img
+                                            src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="CA Professionals"
+                                            className="rounded-xl shadow-2xl hero-image w-full"
+                                            style={{ height: 'auto', maxHeight: '500px', objectFit: 'cover' }}
+                                        />
+                                    </div>
+                                    {/* Experience Counter with Blink Animation */}
+                                    <div className={`absolute -bottom-6 -left-4 md:-bottom-6 md:-left-6 bg-white text-gray-800 p-4 md:p-6 rounded-xl shadow-2xl experience-counter ${blinkCounter ? 'blink-animation' : ''}`}>
+                                        <div className="text-2xl md:text-4xl font-bold text-blue-700">25+</div>
+                                        <div className="font-medium text-sm md:text-base">Years Experience</div>
+                                    </div>
+
+                                    {/* Additional stat for desktop */}
+                                    <div className="hidden md:block absolute -top-6 -right-6 bg-blue-600 text-white p-6 rounded-xl shadow-2xl">
+                                        <div className="text-4xl font-bold">500+</div>
+                                        <div className="font-medium">Satisfied Clients</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+
+            // Services Component
+            const ServicesSection = () => (
+                <section id="services" className="py-12 md:py-16 bg-white">
+                    <div className="container mx-auto px-4">
+                        <div className="text-center mb-12 md:mb-16">
+                            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Our Professional Services</h2>
+                            <p className="text-gray-600 text-base md:text-lg max-w-3xl mx-auto">Comprehensive financial solutions tailored to meet the unique needs of your business</p>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                            {services.map((service, index) => (
+                                <div key={index} className="service-card bg-gray-50 rounded-xl p-6 md:p-8 shadow-md hover:shadow-xl border border-gray-100 transition duration-300">
+                                    <div className="bg-blue-100 text-blue-700 w-12 h-12 md:w-16 md:h-16 rounded-lg flex items-center justify-center mb-4 md:mb-6">
+                                        <i className={`fas ${service.icon} text-xl md:text-2xl`}></i>
+                                    </div>
+                                    <h3 className="text-xl md:text-2xl font-bold text-gray-800 mb-3 md:mb-4">{service.title}</h3>
+                                    <p className="text-gray-600 text-sm md:text-base mb-6">{service.description}</p>
+                                    <button className="text-blue-700 font-medium flex items-center text-sm md:text-base">
+                                        Learn More <i className="fas fa-arrow-right ml-2"></i>
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
+
+            // About Component
+            const AboutSection = () => (
+                <section id="about" className="py-12 md:py-16 bg-gray-50">
+                    <div className="container mx-auto px-4">
+                        <div className="flex flex-col lg:flex-row items-center">
+                            <div className="lg:w-1/2 mb-12 lg:mb-0">
+                                <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-6">Why Choose Agrawal Srivastava & Co.?</h2>
+                                <p className="text-gray-600 mb-6 text-base md:text-lg">
+                                    With over 25 years of experience, Agrawal Srivastava & Co. has established itself as a leading CA firm providing exceptional financial services to businesses across various sectors.
+                                </p>
+                                <ul className="space-y-3 md:space-y-4 mb-8">
+                                    {[
+                                        'Team of experienced Chartered Accountants and financial experts',
+                                        'Proven track record of client satisfaction and retention',
+                                        'Customized solutions for businesses of all sizes',
+                                        'Technology-driven approach for efficiency and accuracy',
+                                        'Commitment to ethical practices and confidentiality'
+                                    ].map((item, index) => (
+                                        <li key={index} className="flex items-start">
+                                            <i className="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                                            <span className="text-gray-700 text-sm md:text-base">{item}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                                <button className="mt-6 bg-blue-700 hover:bg-blue-800 text-white px-6 py-3 md:px-8 md:py-3 rounded-lg font-semibold text-base md:text-lg transition duration-300">
+                                    <i className="fas fa-download mr-2"></i> Download Company Profile
+                                </button>
+                            </div>
+                            <div className="lg:w-1/2 lg:pl-8 xl:pl-12">
+                                <div className="bg-white rounded-xl shadow-xl p-6 md:p-8">
+                                    <h3 className="text-2xl font-bold text-gray-800 mb-6">Our Expertise</h3>
+                                    <div className="space-y-4 md:space-y-6">
+                                        {[
+                                            { label: 'Tax Advisory', percentage: 95 },
+                                            { label: 'Audit & Assurance', percentage: 92 },
+                                            { label: 'Business Consulting', percentage: 88 },
+                                            { label: 'GST Compliance', percentage: 96 }
+                                        ].map((skill, index) => (
+                                            <div key={index}>
+                                                <div className="flex justify-between mb-1 md:mb-2">
+                                                    <span className="font-medium text-gray-700 text-sm md:text-base">{skill.label}</span>
+                                                    <span className="font-bold text-blue-700">{skill.percentage}%</span>
+                                                </div>
+                                                <div className="w-full bg-gray-200 rounded-full h-2 md:h-3">
+                                                    <div
+                                                        className="bg-blue-600 h-2 md:h-3 rounded-full"
+                                                        style={{ width: `${skill.percentage}%` }}
+                                                    ></div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    <div className="mt-8 md:mt-12 p-4 md:p-6 bg-blue-50 rounded-xl">
+                                        <div className="flex flex-col sm:flex-row items-center">
+                                            <div className="bg-blue-100 text-blue-700 w-12 h-12 md:w-14 md:h-14 rounded-lg flex items-center justify-center mr-0 sm:mr-4 mb-4 sm:mb-0">
+                                                <i className="fas fa-headset text-xl md:text-2xl"></i>
+                                            </div>
+                                            <div className="text-center sm:text-left">
+                                                <h4 className="text-lg md:text-xl font-bold text-gray-800">Need Immediate Assistance?</h4>
+                                                <p className="text-gray-600 text-sm md:text-base">Our experts are available to answer your queries</p>
+                                                <div className="text-blue-700 font-bold text-xl md:text-2xl mt-2">+91 98765 43210</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+
+            // Team Component
+            const TeamSection = () => (
+                <section id="team" className="py-12 md:py-16 bg-white">
+                    <div className="container mx-auto px-4">
+                        <div className="text-center mb-12 md:mb-16">
+                            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Meet Our Expert Team</h2>
+                            <p className="text-gray-600 text-base md:text-lg max-w-3xl mx-auto">Our team of qualified professionals brings diverse expertise to provide comprehensive financial solutions</p>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+                            {teamMembers.map((member, index) => (
+                                <div key={index} className="bg-gray-50 rounded-xl overflow-hidden shadow-lg border border-gray-100">
+                                    <div className="h-40 md:h-48 bg-gradient-to-r from-blue-800 to-blue-600 flex items-center justify-center">
+                                        <div className="bg-white bg-opacity-20 w-24 h-24 md:w-28 md:h-28 rounded-full flex items-center justify-center">
+                                            <i className="fas fa-user-tie text-white text-4xl md:text-5xl"></i>
+                                        </div>
+                                    </div>
+                                    <div className="p-4 md:p-6">
+                                        <h3 className="text-xl md:text-2xl font-bold text-gray-800 mb-1">{member.name}</h3>
+                                        <p className="text-blue-700 font-medium mb-2 md:mb-3 text-sm md:text-base">{member.designation}</p>
+                                        <div className="space-y-1 md:space-y-2 text-gray-600 mb-3 md:mb-4 text-xs md:text-sm">
+                                            <div className="flex items-center">
+                                                <i className="fas fa-graduation-cap text-blue-500 mr-2 text-xs md:text-sm"></i>
+                                                <span>{member.qualification}</span>
+                                            </div>
+                                            <div className="flex items-center">
+                                                <i className="fas fa-briefcase text-blue-500 mr-2 text-xs md:text-sm"></i>
+                                                <span>{member.experience} experience</span>
+                                            </div>
+                                            <div className="flex items-center">
+                                                <i className="fas fa-star text-blue-500 mr-2 text-xs md:text-sm"></i>
+                                                <span>Specialty: {member.specialty}</span>
+                                            </div>
+                                        </div>
+                                        <button className="w-full bg-blue-100 hover:bg-blue-200 text-blue-700 font-medium py-2 rounded-lg transition duration-300 text-sm md:text-base">
+                                            <i className="far fa-envelope mr-2"></i> Contact
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
+
+            // Testimonials Component
+            const TestimonialsSection = () => (
+                <section className="py-12 md:py-16 gradient-bg text-white">
+                    <div className="container mx-auto px-4">
+                        <div className="text-center mb-8 md:mb-12">
+                            <h2 className="text-3xl md:text-4xl font-bold mb-4">What Our Clients Say</h2>
+                            <p className="text-lg md:text-xl opacity-90">Trusted by over 500+ businesses across India</p>
+                        </div>
+
+                        <div className="max-w-4xl mx-auto">
+                            <div className="bg-white bg-opacity-10 backdrop-blur-sm rounded-2xl p-6 md:p-8 testimonial-slide">
+                                <div className="flex flex-col sm:flex-row items-center mb-4 md:mb-6">
+                                    <div className="bg-white text-blue-800 w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center text-xl md:text-2xl font-bold mb-4 sm:mb-0 sm:mr-4">
+                                        {testimonials[testimonialIndex].name.charAt(0)}
+                                    </div>
+                                    <div className="text-center sm:text-left">
+                                        <h4 className="text-xl md:text-2xl font-bold">{testimonials[testimonialIndex].name}</h4>
+                                        <p className="opacity-90 text-sm md:text-base">{testimonials[testimonialIndex].company}</p>
+                                    </div>
+                                </div>
+                                <p className="text-base md:text-xl mb-4 md:mb-6 italic">"{testimonials[testimonialIndex].text}"</p>
+                                <div className="flex justify-center sm:justify-start">
+                                    {[...Array(5)].map((_, i) => (
+                                        <i
+                                            key={i}
+                                            className={`fas fa-star ${i < testimonials[testimonialIndex].rating ? 'text-yellow-400' : 'text-gray-300'} mr-1 text-sm md:text-base`}
+                                        ></i>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="flex justify-center mt-6 md:mt-8 space-x-2 md:space-x-3">
+                                {testimonials.map((_, index) => (
+                                    <button
+                                        key={index}
+                                        className={`w-2 h-2 md:w-3 md:h-3 rounded-full ${index === testimonialIndex ? 'bg-white' : 'bg-white bg-opacity-50'}`}
+                                        onClick={() => setTestimonialIndex(index)}
+                                    ></button>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+
+            // Contact Component
+            const ContactSection = () => (
+                <section id="contact" className="py-12 md:py-16 bg-white">
+                    <div className="container mx-auto px-4">
+                        <div className="text-center mb-12 md:mb-16">
+                            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Get In Touch</h2>
+                            <p className="text-gray-600 text-base md:text-lg max-w-3xl mx-auto">Contact us for a free initial consultation. Our team will respond within 24 hours.</p>
+                        </div>
+
+                        <div className="flex flex-col lg:flex-row">
+                            <div className="lg:w-1/2 mb-12 lg:mb-0 lg:pr-8 xl:pr-12">
+                                <div className="bg-gradient-to-br from-blue-50 to-gray-50 rounded-2xl p-6 md:p-8 shadow-lg">
+                                    <h3 className="text-2xl font-bold text-gray-800 mb-6">Contact Information</h3>
+
+                                    <div className="space-y-4 md:space-y-6 mb-8 md:mb-10">
+                                        {[
+                                            { icon: 'fa-map-marker-alt', title: 'Office Address', details: 'Level 5, Business Tower, Connaught Place, New Delhi - 110001' },
+                                            { icon: 'fa-phone-alt', title: 'Phone Number', details: '+91 98765 43210 (Office)<br>+91 98765 43211 (Support)' },
+                                            { icon: 'fa-envelope', title: 'Email Address', details: 'info@agrawalsrivastava.com<br>support@agrawalsrivastava.com' },
+                                            { icon: 'fa-clock', title: 'Working Hours', details: 'Mon - Fri: 9:00 AM - 7:00 PM<br>Sat: 10:00 AM - 2:00 PM' }
+                                        ].map((item, index) => (
+                                            <div key={index} className="flex">
+                                                <div className="bg-blue-100 text-blue-700 w-10 h-10 md:w-12 md:h-12 rounded-lg flex items-center justify-center mr-3 md:mr-4">
+                                                    <i className={`fas ${item.icon} text-base md:text-lg`}></i>
+                                                </div>
+                                                <div>
+                                                    <h4 className="font-bold text-gray-800 text-sm md:text-base">{item.title}</h4>
+                                                    <p className="text-gray-600 text-xs md:text-sm" dangerouslySetInnerHTML={{ __html: item.details }}></p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    <div className="border-t pt-4 md:pt-6">
+                                        <h4 className="font-bold text-gray-800 mb-3 md:mb-4 text-sm md:text-base">Follow Us</h4>
+                                        <div className="flex space-x-3 md:space-x-4">
+                                            {['facebook', 'twitter', 'linkedin', 'instagram'].map((platform) => (
+                                                <a key={platform} href="#" className="bg-blue-100 text-blue-700 w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center hover:bg-blue-200 transition duration-300 text-sm md:text-base">
+                                                    <i className={`fab fa-${platform}`}></i>
+                                                </a>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="lg:w-1/2">
+                                <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8 border border-gray-100">
+                                    {formSubmitted ? (
+                                        <div className="text-center py-8 md:py-12">
+                                            <div className="bg-green-100 text-green-700 w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6">
+                                                <i className="fas fa-check text-2xl md:text-3xl"></i>
+                                            </div>
+                                            <h3 className="text-xl md:text-2xl font-bold text-gray-800 mb-3 md:mb-4">Thank You!</h3>
+                                            <p className="text-gray-600 text-sm md:text-base">Your message has been sent successfully. Our team will contact you within 24 hours.</p>
+                                        </div>
+                                    ) : (
+                                        <>
+                                            <h3 className="text-2xl font-bold text-gray-800 mb-6">Send us a Message</h3>
+                                            <form onSubmit={handleSubmit}>
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-4 md:mb-6">
+                                                    <div>
+                                                        <label className="block text-gray-700 font-medium mb-2 text-sm md:text-base">Full Name *</label>
+                                                        <input
+                                                            type="text"
+                                                            name="name"
+                                                            value={formData.name}
+                                                            onChange={handleInputChange}
+                                                            required
+                                                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition text-sm md:text-base"
+                                                            placeholder="Enter your name"
+                                                        />
+                                                    </div>
+                                                    <div>
+                                                        <label className="block text-gray-700 font-medium mb-2 text-sm md:text-base">Email Address *</label>
+                                                        <input
+                                                            type="email"
+                                                            name="email"
+                                                            value={formData.email}
+                                                            onChange={handleInputChange}
+                                                            required
+                                                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition text-sm md:text-base"
+                                                            placeholder="Enter your email"
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-4 md:mb-6">
+                                                    <div>
+                                                        <label className="block text-gray-700 font-medium mb-2 text-sm md:text-base">Phone Number</label>
+                                                        <input
+                                                            type="tel"
+                                                            name="phone"
+                                                            value={formData.phone}
+                                                            onChange={handleInputChange}
+                                                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition text-sm md:text-base"
+                                                            placeholder="Enter your phone"
+                                                        />
+                                                    </div>
+                                                    <div>
+                                                        <label className="block text-gray-700 font-medium mb-2 text-sm md:text-base">Service Interested In</label>
+                                                        <select
+                                                            name="service"
+                                                            value={formData.service}
+                                                            onChange={handleInputChange}
+                                                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition text-sm md:text-base"
+                                                        >
+                                                            <option value="">Select a service</option>
+                                                            <option value="tax">Tax Planning</option>
+                                                            <option value="audit">Audit & Assurance</option>
+                                                            <option value="gst">GST Services</option>
+                                                            <option value="advisory">Business Advisory</option>
+                                                            <option value="finance">Corporate Finance</option>
+                                                            <option value="risk">Risk Management</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div className="mb-6">
+                                                    <label className="block text-gray-700 font-medium mb-2 text-sm md:text-base">Your Message *</label>
+                                                    <textarea
+                                                        name="message"
+                                                        value={formData.message}
+                                                        onChange={handleInputChange}
+                                                        required
+                                                        rows="4"
+                                                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition text-sm md:text-base"
+                                                        placeholder="Tell us about your requirements..."
+                                                    ></textarea>
+                                                </div>
+
+                                                <button
+                                                    type="submit"
+                                                    className="w-full bg-blue-700 hover:bg-blue-800 text-white font-semibold py-3 px-6 rounded-lg text-base md:text-lg transition duration-300"
+                                                >
+                                                    Send Message <i className="fas fa-paper-plane ml-2"></i>
+                                                </button>
+                                            </form>
+                                        </>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+
+            // Footer Component
+            const Footer = () => (
+                <footer className="bg-gray-900 text-white pt-8 md:pt-12 pb-6">
+                    <div className="container mx-auto px-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-6 md:mb-8">
+                            <div>
+                                <div className="flex items-center mb-4 md:mb-6">
+                                    <div className="bg-blue-700 text-white p-2 rounded-lg mr-3">
+                                        <i className="fas fa-balance-scale text-xl"></i>
+                                    </div>
+                                    <h2 className="company-name text-xl md:text-2xl font-bold">
+                                        <span className="text-blue-400">Agrawal</span>
+                                        <span className="text-blue-300"> Srivastava</span>
+                                        <span className="text-gray-300"> & Co.</span>
+                                    </h2>
+                                </div>
+                                <p className="text-gray-400 mb-4 md:mb-6 text-xs md:text-sm">Professional Chartered Accountancy firm providing comprehensive financial solutions since 1998.</p>
+                                <div className="flex space-x-3">
+                                    {['facebook', 'twitter', 'linkedin', 'instagram'].map((platform) => (
+                                        <a key={platform} href="#" className="bg-gray-800 hover:bg-blue-700 w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center transition duration-300 text-sm">
+                                            <i className={`fab fa-${platform}`}></i>
+                                        </a>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div>
+                                <h3 className="text-lg md:text-xl font-bold mb-3 md:mb-6">Quick Links</h3>
+                                <ul className="space-y-2">
+                                    {['Home', 'Services', 'About Us', 'Our Team', 'Contact Us'].map((link) => (
+                                        <li key={link}>
+                                            <a href="#" className="text-gray-400 hover:text-white transition duration-300 text-sm md:text-base">{link}</a>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+
+                            <div>
+                                <h3 className="text-lg md:text-xl font-bold mb-3 md:mb-6">Our Services</h3>
+                                <ul className="space-y-2">
+                                    {['Tax Planning', 'Audit & Assurance', 'Business Advisory', 'GST Services', 'Corporate Finance', 'Risk Management'].map((service) => (
+                                        <li key={service}>
+                                            <a href="#" className="text-gray-400 hover:text-white transition duration-300 text-sm md:text-base">{service}</a>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+
+                            <div>
+                                <h3 className="text-lg md:text-xl font-bold mb-3 md:mb-6">Subscribe to Newsletter</h3>
+                                <p className="text-gray-400 mb-3 md:mb-4 text-xs md:text-sm">Stay updated with the latest tax laws and financial insights.</p>
+                                <div className="flex">
+                                    <input
+                                        type="email"
+                                        placeholder="Your email"
+                                        className="bg-gray-800 text-white p-2 md:p-3 rounded-l-lg w-full outline-none text-sm"
+                                    />
+                                    <button className="bg-blue-700 hover:bg-blue-800 px-3 md:px-4 rounded-r-lg">
+                                        <i className="fas fa-paper-plane text-sm md:text-base"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="border-t border-gray-800 pt-4 md:pt-6 text-center text-gray-400 text-xs md:text-sm">
+                            <p>&copy; {new Date().getFullYear()} Agrawal Srivastava & Co. All rights reserved. | <a href="#" className="hover:text-white">Privacy Policy</a> | <a href="#" className="hover:text-white">Terms of Service</a></p>
+                        </div>
+                    </div>
+                </footer>
+            );
+
+            // Render active section based on state
+            const renderActiveSection = () => {
+                switch (activeTab) {
+                    case 'services':
+                        return <ServicesSection />;
+                    case 'about':
+                        return <AboutSection />;
+                    case 'team':
+                        return <TeamSection />;
+                    case 'contact':
+                        return <ContactSection />;
+                    default:
+                        return (
+                            <>
+                                <HomeSection />
+                                <ServicesSection />
+                                <AboutSection />
+                                <TeamSection />
+                                <TestimonialsSection />
+                                <ContactSection />
+                            </>
+                        );
+                }
+            };
+
+            return (
+                <div>
+                    <Navigation />
+                    <main>
+                        {renderActiveSection()}
+                    </main>
+                    <Footer />
+                </div>
+            );
+        }
+
+        // Render the React app to the root div
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+
+</html>
